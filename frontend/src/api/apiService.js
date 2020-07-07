@@ -28,12 +28,13 @@ async function getAllGrades(){
 
     const grades = res.data.grades.map((grade)=>{
         const {student, subject, type} = grade
-        
+
         return {
             ...grade,
             studentLowerCase: student.toLowerCase(),
             subjectLowerCase: subject.toLowerCase(),
             typeLowerCase: type.toLowerCase(),
+            isDeleted: false
         }
     })
 
