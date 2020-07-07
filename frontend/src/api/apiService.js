@@ -22,3 +22,17 @@ const GRADE_VALIDATION = [
         maxValue: 50,
     },
 ]
+
+async function getAllGrades(){
+    const res = await axios.get(API_URL)
+
+    const grades = res.data.grades.map((grade)=>{
+        return {
+            ...grade,
+        }
+    })
+
+    return grades
+}
+
+export {getAllGrades}
