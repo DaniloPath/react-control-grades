@@ -2,7 +2,18 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+In directoy backend, you can run:
+
+### `npm update` (only step)
+
+### `npm start`
+
+Runs the app in the development mode.<br />
+Open [http://localhost:3001](http://localhost:3001/grade/) to view it in the browser.
+
+In the frontend directory, you can run:
+
+### `yarn` (only step)
 
 ### `yarn start`
 
