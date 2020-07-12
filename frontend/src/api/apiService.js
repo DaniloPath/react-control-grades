@@ -1,130 +1,140 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/grade/'
+const API_URL = 'http://localhost:3001/grade/';
 
 const GRADE_VALIDATION = [
-    {
-        id: 1,
-        gradeType: 'Exercícios',
-        minValue: 0,
-        maxValue: 10,
-    },
-    {
-        id: 2,
-        gradeType: 'Trabalho Prático',
-        minValue: 0,
-        maxValue: 40,
-    },
-    {
-        id: 3,
-        gradeType: 'Desafio',
-        minValue: 0,
-        maxValue: 50,
-    },
-]
+  {
+    id: 1,
+    gradeType: 'Exercícios',
+    minValue: 0,
+    maxValue: 10,
+  },
+  {
+    id: 2,
+    gradeType: 'Trabalho Prático',
+    minValue: 0,
+    maxValue: 40,
+  },
+  {
+    id: 3,
+    gradeType: 'Desafio',
+    minValue: 0,
+    maxValue: 50,
+  },
+];
 
-async function getAllGrades(){
-    const res = await axios.get(API_URL)
+async function getAllGrades() {
+  const res = await axios.get(API_URL);
 
-    const grades = res.data.grades.map((grade)=>{
-        const {student, subject, type} = grade
+  const grades = res.data.grades.map((grade) => {
+    const { student, subject, type } = grade;
 
-        return {
-            ...grade,
-            studentLowerCase: student.toLowerCase(),
-            subjectLowerCase: subject.toLowerCase(),
-            typeLowerCase: type.toLowerCase(),
-            isDeleted: false
-        }
-    })
-    //Forma um conjunto de dados para se ter dados únicos
-    let allStudents = new Set()
-    grades.forEach(grade => allStudents.add(grade.student))
-    //Transforma em array
-    allStudents=Array.from(allStudents)
+    return {
+      ...grade,
+      studentLowerCase: student.toLowerCase(),
+      subjectLowerCase: subject.toLowerCase(),
+      typeLowerCase: type.toLowerCase(),
+      isDeleted: false,
+    };
+  });
+  //Forma um conjunto de dados para se ter dados únicos
+  let allStudents = new Set();
+  grades.forEach((grade) => allStudents.add(grade.student));
+  //Transforma em array
+  allStudents = Array.from(allStudents);
 
-    let allSubjects = new Set()
-    grades.forEach(grade => allSubjects.add(grade.subject))
-    allSubjects=Array.from(allSubjects)
-    
-    let allTypes = new Set()
-    grades.forEach(grade => allTypes.add(grade.type))
-    allTypes=Array.from(allTypes)
+  let allSubjects = new Set();
+  grades.forEach((grade) => allSubjects.add(grade.subject));
+  allSubjects = Array.from(allSubjects);
 
-    let maxId = -1
-    grades.forEach(({id})=>{
-        if (id > maxId){
-            maxId = id
-        }
-    })
+  let allTypes = new Set();
+  grades.forEach((grade) => allTypes.add(grade.type));
+  allTypes = Array.from(allTypes);
 
-    let nexId = maxId + 1
+  let maxId = -1;
+  grades.forEach(({ id }) => {
+    if (id > maxId) {
+      maxId = id;
+    }
+  });
 
-    const allCombinations = []
-    allStudents.forEach(student=>{
-        allSubjects.forEach(subject=>{
-            allTypes.forEach(type=>{
-                allCombinations.push({
-                    student,
-                    subject,
-                    type,
-                })
-            })
-        })
-    })
+  let nexId = maxId + 1;
 
-    allCombinations.forEach(({student, subject, type})=>{
-        const hasItem = grades.find((grade)=>{
-            return grade.subject === subject && grade.student === student && grade.type === type
-        })
+  const allCombinations = [];
+  allStudents.forEach((student) => {
+    allSubjects.forEach((subject) => {
+      allTypes.forEach((type) => {
+        allCombinations.push({
+          student,
+          subject,
+          type,
+        });
+      });
+    });
+  });
 
-        if(!hasItem){
-            //adicionando um item que não existe no back-end
-            grades.push({
-                id: nexId++,
-                student,
-                studentLowerCase: student.toLowerCase(),
-                subject,
-                subjectLowerCase: subject.toLowerCase(),
-                type,
-                typeLowerCase: type.toLowerCase(),
-                value: 0,
-                isDeleted: true,
-            })
-        }
-    })
+  allCombinations.forEach(({ student, subject, type }) => {
+    const hasItem = grades.find((grade) => {
+      return (
+        grade.subject === subject &&
+        grade.student === student &&
+        grade.type === type
+      );
+    });
 
-    grades.sort((a,b)=> a.typeLowerCase.localeCompare(b.typeLowerCase))
-    grades.sort((a,b)=> a.subjectLowerCase.localeCompare(b.subjectLowerCase))
-    grades.sort((a,b)=> a.studentLowerCase.localeCompare(b.studentLowerCase))
-    
+    if (!hasItem) {
+      //adicionando um item que não existe no back-end
+      grades.push({
+        id: nexId++,
+        student,
+        studentLowerCase: student.toLowerCase(),
+        subject,
+        subjectLowerCase: subject.toLowerCase(),
+        type,
+        typeLowerCase: type.toLowerCase(),
+        value: 0,
+        isDeleted: true,
+      });
+    }
+  });
 
+  grades.sort((a, b) => a.typeLowerCase.localeCompare(b.typeLowerCase));
+  grades.sort((a, b) => a.subjectLowerCase.localeCompare(b.subjectLowerCase));
+  grades.sort((a, b) => a.studentLowerCase.localeCompare(b.studentLowerCase));
 
-    return grades
+  return grades;
 }
 
 async function insertGrade(grade) {
-    const response = await axios.post(API_URL, grade)
-    return response.data.id
+  const response = await axios.post(API_URL, grade);
+  return response.data.id;
 }
 
-async function updateGrade(grade){
-    const response = await axios.put(API_URL, grade)
-    return response.data
+async function updateGrade(grade) {
+  const response = await axios.put(API_URL, grade);
+  return response.data;
 }
 
-async function deleteGrade(grade){
-    const response = await axios.delete(`${API_URL}/${grade.id}`)
-    return response.data
+async function deleteGrade(grade) {
+  const response = await axios.delete(`${API_URL}/${grade.id}`);
+  return response.data;
 }
 
-async function getValidationFromGradeType(gradeType){
-    const gradeValidation = GRADE_VALIDATION.find((item)=> item.gradeType===gradeType)
-    const {minValue, maxValue} = gradeValidation
-    return {
-        minValue,
-        maxValue,
-    }
+async function getValidationFromGradeType(gradeType) {
+  const gradeValidation = GRADE_VALIDATION.find(
+    (item) => item.gradeType === gradeType
+  );
+  const { minValue, maxValue } = gradeValidation;
+  return {
+    minValue,
+    maxValue,
+  };
 }
 
-export {getAllGrades, insertGrade, updateGrade, deleteGrade, getValidationFromGradeType}
+export {
+  getAllGrades,
+  insertGrade,
+  updateGrade,
+  deleteGrade,
+  getValidationFromGradeType,
+};
