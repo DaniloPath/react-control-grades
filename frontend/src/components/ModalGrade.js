@@ -13,8 +13,11 @@ export default function ModalGrade({ onSave, onClose, selectedGrade }) {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    const validation = api.getValidationFromGradeType(type);
-    setGradeValidation(validation);
+    const getValidation = async () => {
+      const validation = await api.getValidationFromGradeType(type);
+      setGradeValidation(validation);
+    };
+    getValidation();
   }, [type]);
 
   useEffect(() => {
@@ -41,12 +44,28 @@ export default function ModalGrade({ onSave, onClose, selectedGrade }) {
     }
   };
 
+  const handleClose = () => {
+    onClose(null);
+  };
   const handleFormSubmit = (event) => {};
-  const handleGradeChange = (event) => {};
+  const handleGradeChange = (event) => {
+    console.log(gradeValidation);
+    setGradeValue(+event.target.value);
+  };
 
   return (
     <div>
       <Modal isOpen={true}>
+        <div style={styles.flexRow}>
+          <span style={styles.title}>Manutenção de Notas</span>
+          <button
+            className="waves-effect waves-lights btn red dark-4"
+            onClick={handleClose}
+          >
+            X
+          </button>
+        </div>
+
         <form onSubmit={handleFormSubmit}></form>
 
         <div className="input-field">
@@ -85,7 +104,34 @@ export default function ModalGrade({ onSave, onClose, selectedGrade }) {
             Nota:
           </label>
         </div>
+        <div style={styles.flexRow}>
+          <button
+            className="waves-effect waves-lights btn"
+            disabled={errorMessage.trim() !== ''}
+          >
+            Salvar
+          </button>
+          <span style={styles.errorMessage}>{errorMessage}</span>
+        </div>
       </Modal>
     </div>
   );
 }
+
+const styles = {
+  flexRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '40px',
+  },
+  title: {
+    fontSize: '1.3rem',
+    fontWeigh: 'bold',
+  },
+  errorMessage: {
+    color: 'red',
+    fontWeigh: 'bold',
+  },
+};

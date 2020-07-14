@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-//Parei na aula 12.16
+//Parei na aula 12.18
 
 import * as api from './api/apiService';
 import Spinner from './components/Spinner';
