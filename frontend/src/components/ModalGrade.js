@@ -47,9 +47,18 @@ export default function ModalGrade({ onSave, onClose, selectedGrade }) {
   const handleClose = () => {
     onClose(null);
   };
-  const handleFormSubmit = (event) => {};
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    const formData = {
+      id,
+      newValue: gradeValue,
+    };
+
+    onSave(formData);
+  };
+
   const handleGradeChange = (event) => {
-    console.log(gradeValidation);
     setGradeValue(+event.target.value);
   };
 
@@ -66,53 +75,53 @@ export default function ModalGrade({ onSave, onClose, selectedGrade }) {
           </button>
         </div>
 
-        <form onSubmit={handleFormSubmit}></form>
+        <form onSubmit={handleFormSubmit}>
+          <div className="input-field">
+            <input type="text" value={student} id="inputName" readOnly />
+            <label className="active" htmlFor="inputName">
+              Nome do aluno:
+            </label>
+          </div>
 
-        <div className="input-field">
-          <input type="text" value={student} id="inputName" readOnly />
-          <label className="active" htmlFor="inputName">
-            Nome do aluno:
-          </label>
-        </div>
+          <div className="input-field">
+            <input type="text" value={subject} id="inputSubject" readOnly />
+            <label className="active" htmlFor="inputSubject">
+              Disciplina:
+            </label>
+          </div>
 
-        <div className="input-field">
-          <input type="text" value={subject} id="inputSubject" readOnly />
-          <label className="active" htmlFor="inputSubject">
-            Disciplina:
-          </label>
-        </div>
+          <div className="input-field">
+            <input type="text" value={type} id="inputType" readOnly />
+            <label className="active" htmlFor="inputType">
+              Tipo de Avaliação:
+            </label>
+          </div>
 
-        <div className="input-field">
-          <input type="text" value={type} id="inputType" readOnly />
-          <label className="active" htmlFor="inputType">
-            Tipo de Avaliação:
-          </label>
-        </div>
-
-        <div className="input-field">
-          <input
-            id="inputGrade"
-            type="number"
-            min={gradeValidation.minValue}
-            max={gradeValidation.maxValue}
-            step="1"
-            autoFocus
-            value={gradeValue}
-            onChange={handleGradeChange}
-          />
-          <label className="active" htmlFor="inputGrade">
-            Nota:
-          </label>
-        </div>
-        <div style={styles.flexRow}>
-          <button
-            className="waves-effect waves-lights btn"
-            disabled={errorMessage.trim() !== ''}
-          >
-            Salvar
-          </button>
-          <span style={styles.errorMessage}>{errorMessage}</span>
-        </div>
+          <div className="input-field">
+            <input
+              id="inputGrade"
+              type="number"
+              min={gradeValidation.minValue}
+              max={gradeValidation.maxValue}
+              step="1"
+              autoFocus
+              value={gradeValue}
+              onChange={handleGradeChange}
+            />
+            <label className="active" htmlFor="inputGrade">
+              Nota:
+            </label>
+          </div>
+          <div style={styles.flexRow}>
+            <button
+              className="waves-effect waves-lights btn"
+              disabled={errorMessage.trim() !== ''}
+            >
+              Salvar
+            </button>
+            <span style={styles.errorMessage}>{errorMessage}</span>
+          </div>
+        </form>
       </Modal>
     </div>
   );
