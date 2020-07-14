@@ -6,9 +6,11 @@ import * as api from '../api/apiService';
 Modal.setAppElement('#root');
 
 export default function ModalGrade({ onSave, onClose, selectedGrade }) {
-  const { gradeValue, setGradeValue } = useState(selectedGrade.value);
-  const { gradeValidation, setGradeValidation } = useState({});
-  const { errorMessage, setErrorMessage } = useState('');
+  const { type } = selectedGrade;
+
+  const [gradeValue, setGradeValue] = useState(selectedGrade.value);
+  const [gradeValidation, setGradeValidation] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const validation = api.getValidationFromGradeType(type);
@@ -25,6 +27,19 @@ export default function ModalGrade({ onSave, onClose, selectedGrade }) {
     }
     setErrorMessage('');
   }, [gradeValue, gradeValidation]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  });
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      onClose(null);
+    }
+  };
 
   return (
     <div>
