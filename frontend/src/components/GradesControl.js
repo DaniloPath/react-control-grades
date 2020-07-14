@@ -1,5 +1,6 @@
 import React from 'react';
 import Action from './Action';
+//Parei na aula 12.16
 
 export default function GradesControl({ grades, onDelete, onPersist }) {
   const tableGrades = [];

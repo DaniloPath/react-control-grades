@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+//Parei na aula 12.16
 
 import * as api from './api/apiService';
 import Spinner from './components/Spinner';
 import GradesControl from './components/GradesControl';
+import ModalGrade from './components/ModalGrade';
 
 export default function App() {
   const [allGrades, setAllGrades] = useState([]);
@@ -42,19 +44,31 @@ export default function App() {
   };
 
   const handlePersist = (grade) => {
-    console.log(grade);
+    setSelectedGrade(grade);
+    setIsModalOpen(true);
   };
+
+  const handlePersistData = () => {};
+  const handleClose = () => {};
 
   return (
     <div>
       <h1 className="center">Controle de Notas</h1>
 
-      {allGrades.length == 0 && <Spinner />}
+      {allGrades.length === 0 && <Spinner />}
       {allGrades.length > 0 && (
         <GradesControl
           grades={allGrades}
           onDelete={handleDelete}
           onPersist={handlePersist}
+        />
+      )}
+
+      {isModalOpen && (
+        <ModalGrade
+          onSave={handlePersistData}
+          onClose={handleClose}
+          selectedGrade={selectedGrade}
         />
       )}
     </div>
